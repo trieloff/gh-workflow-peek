@@ -2,6 +2,9 @@
 
 A GitHub CLI extension to intelligently filter and highlight errors in GitHub Actions workflow logs by severity, exhausting higher-priority issues before showing lower ones. Perfect for developers and AI coding agents working with limited context windows.
 
+![a_sleek_modern_di_image](https://github.com/user-attachments/assets/451a28c1-ccb5-4bae-bb16-b94b45f9cebf)
+
+
 ## Features
 
 - **Smart Error Prioritization**: Automatically categorizes and prioritizes errors by severity (fatal → error → warn → fail → assert → exception)
