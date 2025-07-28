@@ -29,8 +29,7 @@ jobs:
     - name: Install dependencies (macOS)
       if: matrix.os == 'macos-latest'
       run: |
-        brew install jq
-        # shellcheck is already installed on macOS runners
+        brew install jq shellcheck
     
     # Run shellcheck on the main script
     - name: Run shellcheck
