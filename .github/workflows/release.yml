@@ -1,0 +1,76 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  # Run tests before creating release
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y jq shellcheck
+    
+    - name: Run shellcheck
+      run: shellcheck gh-workflow-peek
+    
+    - name: Run tests
+      run: |
+        chmod +x tests/test-simple.sh
+        tests/test-simple.sh
+  
+  # Create release after tests pass
+  release:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Create Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        body: |
+          ## Installation
+          
+          Install the extension using the GitHub CLI:
+          
+          ```bash
+          gh extension install trieloff/gh-workflow-peek
+          ```
+          
+          ## Upgrade
+          
+          Upgrade to the latest version:
+          
+          ```bash
+          gh extension upgrade workflow-peek
+          ```
+          
+          ## What's New
+          
+          See the [README](https://github.com/trieloff/gh-workflow-peek) for full documentation and examples.
+          
+          ### Requirements
+          
+          - GitHub CLI (`gh`) - authenticated with `gh auth login`
+          - `jq` - for JSON parsing
+          - `column` - for formatting output (usually part of util-linux)
+          - `awk` - for text processing (standard on most systems)
+          - Bash 4.0 or higher
+        draft: false
+        prerelease: false

@@ -1,0 +1,71 @@
+name: Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    
+    steps:
+    # Checkout the repository code
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    # Install dependencies on Ubuntu
+    - name: Install dependencies (Ubuntu)
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y jq shellcheck
+    
+    # Install dependencies on macOS
+    - name: Install dependencies (macOS)
+      if: matrix.os == 'macos-latest'
+      run: |
+        brew install jq shellcheck
+    
+    # Run shellcheck on the main script
+    - name: Run shellcheck
+      run: shellcheck gh-workflow-peek
+    
+    # Run the test suite
+    - name: Run tests
+      run: |
+        chmod +x tests/test-simple.sh
+        tests/test-simple.sh
+    
+    # Verify script structure without authentication
+    - name: Verify script structure
+      run: |
+        # Check shebang
+        if ! head -n 1 gh-workflow-peek | grep -q "#!/usr/bin/env bash"; then
+          echo "Error: Invalid shebang"
+          exit 1
+        fi
+        
+        # Check error handling
+        if ! grep -q "^set -euo pipefail" gh-workflow-peek; then
+          echo "Error: Missing error handling setup"
+          exit 1
+        fi
+        
+        # Check version variable
+        if ! grep -q 'VERSION=' gh-workflow-peek; then
+          echo "Error: Missing VERSION variable"
+          exit 1
+        fi
+        
+        # Check dependencies function
+        if ! grep -q "check_dependencies" gh-workflow-peek; then
+          echo "Error: Missing check_dependencies function"
+          exit 1
+        fi
+        
+        echo "All structural checks passed!"
