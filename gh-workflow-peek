@@ -1,4 +1,62 @@
-#!/bin/bash
+#!/usr/bin/env bash
+#
+# gh-workflow-peek - GitHub CLI extension for analyzing workflow logs
+# Version: 1.0.0
+# https://github.com/<OWNER>/gh-workflow-peek
+#
+# A GitHub CLI extension to intelligently filter and highlight errors in
+# GitHub Actions workflow logs, prioritizing by severity.
+
+set -euo pipefail
+
+# Extension metadata
+VERSION="1.0.0"
+EXTENSION_NAME="gh-workflow-peek"
+
+# Check for required dependencies
+check_dependencies() {
+    local missing_deps=()
+    
+    # Check for gh CLI
+    if ! command -v gh &> /dev/null; then
+        missing_deps+=("gh (GitHub CLI)")
+    fi
+    
+    # Check for jq
+    if ! command -v jq &> /dev/null; then
+        missing_deps+=("jq")
+    fi
+    
+    # Check for column
+    if ! command -v column &> /dev/null; then
+        missing_deps+=("column (from util-linux)")
+    fi
+    
+    # Check for awk
+    if ! command -v awk &> /dev/null; then
+        missing_deps+=("awk")
+    fi
+    
+    if [ ${#missing_deps[@]} -ne 0 ]; then
+        echo "Error: Missing required dependencies:" >&2
+        for dep in "${missing_deps[@]}"; do
+            echo "  - $dep" >&2
+        done
+        echo "" >&2
+        echo "Please install the missing dependencies and try again." >&2
+        exit 1
+    fi
+    
+    # Check if gh is authenticated
+    if ! gh auth status &> /dev/null; then
+        echo "Error: GitHub CLI is not authenticated." >&2
+        echo "Please run 'gh auth login' first." >&2
+        exit 1
+    fi
+}
+
+# Run dependency check
+check_dependencies
 
 # Default values
 CONTEXT=0
@@ -15,8 +73,6 @@ DEFAULT_REPO=$(gh repo view --json nameWithOwner -q .nameWithOwner 2>/dev/null |
 REPO="$DEFAULT_REPO"
 
 # Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BOLD='\033[1m'
 NC='\033[0m' # No Color
@@ -56,36 +112,75 @@ while [[ $# -gt 0 ]]; do
             REPO="$2"
             shift 2
             ;;
+        --version|-v)
+            echo "$EXTENSION_NAME version $VERSION"
+            exit 0
+            ;;
         --help|-h)
-            echo "GitHub Actions Log Viewer"
+            echo "gh workflow-peek - Intelligent GitHub Actions log analyzer"
+            echo "Version: $VERSION"
             echo ""
-            echo "Usage: $0 [OPTIONS] [RUN_ID]"
+            echo "USAGE:"
+            echo "  gh workflow-peek [RUN_ID] [OPTIONS]"
+            echo "  gh workflow-peek --help"
+            echo "  gh workflow-peek --version"
             echo ""
-            echo "Options:"
-            echo "  --id RUN_ID          GitHub Actions run ID (or provide as first positional arg)"
-            echo "  --job, -j JOB        Select job by index (3), ID (32141145124), or name (\"Python on Windows\")"
+            echo "DESCRIPTION:"
+            echo "  Intelligently filters and highlights errors in GitHub Actions logs by"
+            echo "  severity, exhausting higher-priority issues before showing lower ones."
+            echo "  Perfect for AI coding agents with limited context windows."
+            echo ""
+            echo "  When no run ID is specified:"
+            echo "  - Shows failed PR checks if available"
+            echo "  - Falls back to recent failed workflow runs"
+            echo "  - Auto-peeks the top failed run with sensible defaults"
+            echo ""
+            echo "OPTIONS:"
+            echo "  [RUN_ID]             GitHub Actions run ID (optional)"
+            echo "  --id RUN_ID          Alternative way to specify run ID"
+            echo "  --job, -j JOB        Select job by:"
+            echo "                       - Index: 3"
+            echo "                       - ID: 32141145124"
+            echo "                       - Name: \"Python on Windows\""
             echo "  --context, -c NUM    Lines of context around matches (default: 0)"
             echo "  --max, -m NUM        Maximum lines to show (default: 100)"
             echo "  --from, -f NUM       Start from line NUM (default: 0 = beginning)"
             echo "  --upto, -u NUM       End at line NUM (default: 0 = end)"
             echo "  --match, -p PATTERN  Custom pattern to search (highest priority)"
             echo "  --repo, -r REPO      Repository (default: current directory's repo)"
+            echo "  --version, -v        Show version information"
             echo "  --help, -h           Show this help message"
             echo ""
-            echo "Severity levels (in priority order):"
-            echo "  1. Custom match (--match)"
-            echo "  2. fatal (red)"
-            echo "  3. error (orange)"
-            echo "  4. warn/warning (yellow)"
-            echo "  5. fail/failed (yellow)"
-            echo "  6. assert (magenta)"
-            echo "  7. exception/traceback (cyan)"
+            echo "SEVERITY LEVELS (in priority order):"
+            echo "  1. Custom match (--match) - blue"
+            echo "  2. fatal - red"
+            echo "  3. error - orange"
+            echo "  4. warn/warning - yellow"
+            echo "  5. fail/failed - yellow"
+            echo "  6. assert - magenta"
+            echo "  7. exception/traceback - cyan"
             echo ""
-            echo "Examples:"
-            echo "  $0 16566617599"
-            echo "  $0 --id 16566617599 --job 3"
-            echo "  $0 --id 16566617599 --job \"Test Python on Windows\""
-            echo "  $0 --id 16566617599 --match 'transaction_rollback' --max 50"
+            echo "EXAMPLES:"
+            echo "  # Auto-detect and peek failed PR checks or recent failures"
+            echo "  gh workflow-peek"
+            echo ""
+            echo "  # Analyze specific workflow run"
+            echo "  gh workflow-peek 16566617599"
+            echo ""
+            echo "  # Select specific job by index"
+            echo "  gh workflow-peek 16566617599 --job 3"
+            echo ""
+            echo "  # Select job by name pattern"
+            echo "  gh workflow-peek 16566617599 --job \"Python on Windows\""
+            echo ""
+            echo "  # Search for specific pattern with context"
+            echo "  gh workflow-peek 16566617599 --match 'transaction_rollback' --context 5"
+            echo ""
+            echo "  # Limit output and focus on specific line range"
+            echo "  gh workflow-peek 16566617599 --from 1000 --upto 2000 --max 50"
+            echo ""
+            echo "LEARN MORE:"
+            echo "  https://github.com/<OWNER>/gh-workflow-peek"
             exit 0
             ;;
         *)
