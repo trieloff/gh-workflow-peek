@@ -48,7 +48,112 @@ git remote add origin https://github.com/<OWNER>/gh-workflow-peek.git
 git push -u origin main
 ```
 
-### 3. Create Initial Release
+### 3. Set Up GitHub Actions (Optional)
+
+Create `.github/workflows/test.yml` for automated testing:
+
+```yaml
+name: Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y jq shellcheck
+    
+    - name: Run shellcheck
+      run: shellcheck gh-workflow-peek
+    
+    - name: Run tests
+      run: ./tests/test-simple.sh
+
+  test-multi-platform:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install dependencies (Ubuntu)
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y jq
+    
+    - name: Install dependencies (macOS)
+      if: matrix.os == 'macos-latest'
+      run: |
+        brew install jq
+    
+    - name: Test script structure
+      run: |
+        # Basic structural tests that don't require gh auth
+        head -n 1 gh-workflow-peek | grep -q "#!/usr/bin/env bash"
+        grep -q "VERSION=" gh-workflow-peek
+        grep -q "check_dependencies" gh-workflow-peek
+```
+
+Create `.github/workflows/release.yml` for automated releases:
+
+```yaml
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Run tests
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq shellcheck
+          ./tests/test-simple.sh
+      
+      - name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            Release ${{ github.ref }}
+            
+            ## Installation
+            ```bash
+            gh extension install ${{ github.repository }}
+            ```
+            
+            ## What's Changed
+            Please see the commit history for changes.
+          draft: false
+          prerelease: false
+```
+
+### 4. Create Initial Release
 
 1. Go to your repository on GitHub
 2. Click on "Releases" → "Create a new release"
@@ -57,7 +162,7 @@ git push -u origin main
 5. Description: Copy the content from CHANGELOG.md for v1.0.0
 6. Click "Publish release"
 
-### 4. Test Installation
+### 5. Test Installation
 
 Test that the extension can be installed:
 
@@ -65,7 +170,7 @@ Test that the extension can be installed:
 gh extension install <OWNER>/gh-workflow-peek
 ```
 
-### 5. Add Repository Topics
+### 6. Add Repository Topics
 
 Add these topics to your repository for better discoverability:
 - `gh-extension`
@@ -75,7 +180,7 @@ Add these topics to your repository for better discoverability:
 - `debugging`
 - `developer-tools`
 
-### 6. Submit to Awesome Lists
+### 7. Submit to Awesome Lists
 
 Consider submitting your extension to:
 - [awesome-gh-cli-extensions](https://github.com/kodepandai/awesome-gh-cli-extensions)
