@@ -189,6 +189,14 @@ Contributions are welcome! Please feel free to submit a Pull Request. For major 
 
 [Apache-2.0](LICENSE)
 
+## Related Vibe Coding Projects
+
+This tool is part of a collection of vibe coding projects designed to enhance AI-assisted development:
+
+- **[ai-aligned-git](https://github.com/trieloff/ai-aligned-git)** - A humorous git wrapper that enforces best practices for AI coding agents, preventing problematic git behaviors like indiscriminate file additions
+- **[vibe-coded-badge-action](https://github.com/trieloff/vibe-coded-badge-action)** - A GitHub Action that analyzes your repository's git history to determine what percentage of commits were made by AI tools and displays it as a badge
+- **[gh-workflow-peek](https://github.com/trieloff/gh-workflow-peek)** - This project - intelligently filters and highlights errors in GitHub Actions workflow logs for efficient debugging
+
 ## Acknowledgments
 
 This extension was designed with AI coding assistants in mind, recognizing the need for efficient log analysis within limited context windows. Special thanks to the GitHub CLI team for making extensions possible.
