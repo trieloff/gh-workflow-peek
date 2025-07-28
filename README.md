@@ -22,10 +22,8 @@ A GitHub CLI extension to intelligently filter and highlight errors in GitHub Ac
 Install the extension using the GitHub CLI:
 
 ```bash
-gh extension install <OWNER>/gh-workflow-peek
+gh extension install trieloff/gh-workflow-peek
 ```
-
-Replace `<OWNER>` with your GitHub username or organization name.
 
 ## Usage
 
