@@ -269,7 +269,10 @@ if [[ -z "$FAILED_JOBS" ]]; then
 fi
 
 # Convert to arrays
-IFS=$'\n' read -r -d '' -a FAILED_JOB_ARRAY <<< "$FAILED_JOBS"
+FAILED_JOB_ARRAY=()
+while IFS= read -r line; do
+    FAILED_JOB_ARRAY+=("$line")
+done <<< "$FAILED_JOBS"
 
 # Display failed jobs
 echo -e "\n${BOLD}Failed Jobs:${NC}"
