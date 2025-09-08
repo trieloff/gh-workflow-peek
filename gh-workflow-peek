@@ -225,8 +225,22 @@ if [[ -z "$RUN_ID" ]]; then
                     exec "$0" "$FIRST_RUN_ID" --max 20 "${@:+$@}"
                 fi
             fi
+        else
+            # Check if there are any PR checks at all
+            ALL_CHECKS=$(echo "$PR_CHECKS_JSON" | jq -r '.[] | "\(.name)\t\(.state)"' | head -5)
+            if [[ -n "$ALL_CHECKS" ]]; then
+                echo -e "${BOLD}✅ All PR checks are passing!${NC}"
+                echo ""
+                echo "$ALL_CHECKS" | column -t -s $'\t'
+                echo ""
+                echo "No errors to peek. Great job!"
+                exit 0
+            fi
         fi
-    else
+    fi
+    
+    # If we reach here, either no PR checks exist or we couldn't find failed ones
+    if [[ -z "$PR_CHECKS_JSON" ]] || [[ $(echo "$PR_CHECKS_JSON" | jq '. | length') -eq 0 ]]; then
         # Fallback to recent failed runs
         echo -e "${BOLD}No PR checks found. Recent failed workflow runs:${NC}"
 
