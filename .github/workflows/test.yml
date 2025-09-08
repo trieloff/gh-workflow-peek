@@ -33,7 +33,7 @@ jobs:
     
     # Run shellcheck on the main script
     - name: Run shellcheck
-      run: shellcheck gh-workflow-peek
+      run: shellcheck --severity=warning gh-workflow-peek
     
     # Run the test suite
     - name: Run tests

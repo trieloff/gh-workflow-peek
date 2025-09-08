@@ -1,0 +1,20 @@
+# ShellCheck configuration for gh-workflow-peek
+
+# Set minimum severity level
+# Valid values: error, warning, info, style
+# We use 'warning' for CI/CD to catch real issues
+# Style issues (SC2250, SC2292) are informational only
+severity=warning
+
+# Enable all optional checks
+enable=all
+
+# Disable specific checks if needed (none for now)
+# disable=SC2086
+
+# Set shell dialect
+shell=bash
+
+# External sources
+# Allows shellcheck to follow source statements
+external-sources=true

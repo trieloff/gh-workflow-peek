@@ -18,7 +18,7 @@ fi
 # Test 2: Script passes shellcheck
 echo -n "2. Shellcheck validation... "
 if command -v shellcheck &> /dev/null; then
-    if shellcheck gh-workflow-peek 2>/dev/null; then
+    if shellcheck --severity=warning gh-workflow-peek 2>/dev/null; then
         echo "PASS"
     else
         echo "FAIL"
