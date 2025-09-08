@@ -222,7 +222,7 @@ if [[ -z "$RUN_ID" ]]; then
                 FIRST_RUN_ID=$(echo "$FIRST_LINK" | grep -oE '/runs/[0-9]+' | cut -d'/' -f3)
                 if [[ -n "$FIRST_RUN_ID" ]]; then
                     echo -e "${YELLOW}Auto-peeking run $FIRST_RUN_ID with --max 20...${NC}\n"
-                    exec "$0" "$FIRST_RUN_ID" --max 20 "${@}"
+                    exec "$0" "$FIRST_RUN_ID" --max 20 "${@:+$@}"
                 fi
             fi
         fi

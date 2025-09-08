@@ -198,6 +198,30 @@ This tool is part of a collection of vibe coding projects designed to enhance AI
 - **[vibe-coded-badge-action](https://github.com/trieloff/vibe-coded-badge-action)** - A GitHub Action that analyzes your repository's git history to determine what percentage of commits were made by AI tools and displays it as a badge
 - **[gh-workflow-peek](https://github.com/trieloff/gh-workflow-peek)** - This project - intelligently filters and highlights errors in GitHub Actions workflow logs for efficient debugging
 
+## Development
+
+### Quality Controls
+
+This project uses automated quality controls to ensure code reliability:
+
+- **ShellCheck**: All shell scripts are automatically checked for syntax errors and best practices
+  - Runs on every pull request and push to main
+  - Configuration in `.shellcheckrc`
+  - Local pre-commit hooks available via `.pre-commit-config.yaml`
+
+### Running Tests Locally
+
+```bash
+# Run shellcheck
+shellcheck gh-workflow-peek
+
+# Run test suite
+./tests/test-simple.sh
+
+# Install pre-commit hooks (optional)
+pre-commit install
+```
+
 ## Acknowledgments
 
 This extension was designed with AI coding assistants in mind, recognizing the need for efficient log analysis within limited context windows. Special thanks to the GitHub CLI team for making extensions possible.
