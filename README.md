@@ -197,6 +197,7 @@ This tool is part of a collection of vibe coding projects designed to enhance AI
 - **[ai-aligned-gh](https://github.com/trieloff/ai-aligned-gh)** - A transparent GitHub CLI wrapper that automatically detects and attributes actions performed by AI coding assistants to ensure proper bot attribution
 - **[vibe-coded-badge-action](https://github.com/trieloff/vibe-coded-badge-action)** - A GitHub Action that analyzes your repository's git history to determine what percentage of commits were made by AI tools and displays it as a badge
 - **[gh-workflow-peek](https://github.com/trieloff/gh-workflow-peek)** - This project - intelligently filters and highlights errors in GitHub Actions workflow logs for efficient debugging
+- **[yolo](https://github.com/trieloff/yolo)** - A portable AI agent launcher that adds appropriate bypass flags and supports isolated git worktrees for safe experimentation
 
 ## Development
 
