@@ -189,15 +189,16 @@ Contributions are welcome! Please feel free to submit a Pull Request. For major 
 
 [Apache-2.0](LICENSE)
 
-## Related Vibe Coding Projects
+## Related Projects
 
-This tool is part of a collection of vibe coding projects designed to enhance AI-assisted development:
+Part of the **[AI Ecoverse](https://github.com/trieloff/ai-ecoverse)** - a comprehensive ecosystem of tools for AI-assisted development:
 
-- **[ai-aligned-git](https://github.com/trieloff/ai-aligned-git)** - A humorous git wrapper that enforces best practices for AI coding agents, preventing problematic git behaviors like indiscriminate file additions
-- **[ai-aligned-gh](https://github.com/trieloff/ai-aligned-gh)** - A transparent GitHub CLI wrapper that automatically detects and attributes actions performed by AI coding assistants to ensure proper bot attribution
-- **[vibe-coded-badge-action](https://github.com/trieloff/vibe-coded-badge-action)** - A GitHub Action that analyzes your repository's git history to determine what percentage of commits were made by AI tools and displays it as a badge
-- **[gh-workflow-peek](https://github.com/trieloff/gh-workflow-peek)** - This project - intelligently filters and highlights errors in GitHub Actions workflow logs for efficient debugging
-- **[yolo](https://github.com/trieloff/yolo)** - A portable AI agent launcher that adds appropriate bypass flags and supports isolated git worktrees for safe experimentation
+- **[yolo](https://github.com/trieloff/yolo)** - AI CLI launcher with worktree isolation
+- **[ai-aligned-git](https://github.com/trieloff/ai-aligned-git)** - Git wrapper for safe AI commit practices
+- **[ai-aligned-gh](https://github.com/trieloff/ai-aligned-gh)** - GitHub CLI wrapper for proper AI attribution
+- **[vibe-coded-badge-action](https://github.com/trieloff/vibe-coded-badge-action)** - Badge showing AI-generated code percentage
+- **[upskill](https://github.com/trieloff/upskill)** - Install Claude/Agent skills from other repositories
+- **[as-a-bot](https://github.com/trieloff/as-a-bot)** - GitHub App token broker for proper AI attribution
 
 ## Development
 
