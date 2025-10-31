@@ -1,5 +1,7 @@
 # gh-workflow-peek
 
+[![Vibe_Coded](https://img.shields.io/badge/Vibe_Coded-ff69b4?style=for-the-badge&logo=claude&logoColor=white)](https://github.com/trieloff/vibe-coded-badge-action)
+
 A GitHub CLI extension to intelligently filter and highlight errors in GitHub Actions workflow logs by severity, exhausting higher-priority issues before showing lower ones. Perfect for developers and AI coding agents working with limited context windows.
 
 ![a_sleek_modern_di_image](https://github.com/user-attachments/assets/451a28c1-ccb5-4bae-bb16-b94b45f9cebf)
